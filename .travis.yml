@@ -3,3 +3,5 @@ scala:
  - 2.12.13
 jdk: openjdk11
 
+script:
+ - ls -la

@@ -4,4 +4,5 @@ scala:
 jdk: openjdk11
 
 script:
- - ls -la
+ - java -jar sbt.bin/sbt-launcher.jar test
+ 

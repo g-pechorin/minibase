@@ -1,8 +1,5 @@
-language: scala
-scala:
- - 2.12.13
+language: java
 jdk: openjdk11
-
 script:
- - java -jar sbt.bin/sbt-launcher.jar test
+ - java -jar sbt.bin/sbt-launch.jar test
  

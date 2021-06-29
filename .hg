@@ -1,15 +1,15 @@
 {
  "bookmarks": [],
  "date": [
-  1624974364,
+  1624994944,
   -3600
  ],
  "phase": "draft",
- "node": "0fc21db4acf318659ff183c39353f36497805e29",
- "rev": 11866,
- "branch": "g4tput",
+ "node": "075a8ee72eaf1af770db76fa63bd2bc06100fc50",
+ "rev": 11873,
+ "branch": "pure-generator",
  "user": "Peter LaValle <peter.lavalle@gmail.com>",
- "desc": "added a settyings line that should fixit",
- "parents": ["4a969c5780bf7d9f1fab141e96fd54ddb8b60eea"],
+ "desc": "fixxed",
+ "parents": ["e698dc429f424574b9e2623aca8a88bd8521b2f2"],
  "tags": ["tip"]
 }

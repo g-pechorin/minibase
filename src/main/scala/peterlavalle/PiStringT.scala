@@ -11,6 +11,11 @@ trait PiStringT {
 	implicit class PiString(text: String) {
 		def /(path: String): File = new File(text) / path
 
+		def drop(prefix: String): String = {
+			require(text.startsWith(prefix))
+			text.substring(prefix.length)
+		}
+
 		def md5: String = {
 			import java.security.MessageDigest
 			val messageDigest: MessageDigest = MessageDigest.getInstance("MD5")

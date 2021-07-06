@@ -1,6 +1,6 @@
 package peterlavalle
 
-import java.io.{File, FileWriter, Writer}
+import java.io._
 
 import scala.io.{BufferedSource, Source}
 
@@ -19,6 +19,9 @@ trait PiFileT {
 	}
 
 	implicit class PiFile(from: File) {
+
+		def <<(input: InputStream) = PiOutputStream(new FileOutputStream(AbsoluteFile.EnsureParent)) << input
+
 		val AbsoluteFile: File = from.getAbsoluteFile
 
 		def ls: Stream[File] =

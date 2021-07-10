@@ -1,6 +1,6 @@
 package peterlavalle
 
-import java.io.{File, FileWriter, Writer}
+import java.io._
 
 import scala.io.{BufferedSource, Source}
 
@@ -19,7 +19,23 @@ trait PiFileT {
 	}
 
 	implicit class PiFile(from: File) {
+
 		val AbsoluteFile: File = from.getAbsoluteFile
+
+		def <<(input: InputStream) = PiOutputStream(new FileOutputStream(AbsoluteFile.EnsureParent)) << input
+
+		def EnsureParent: File = {
+			require(ParentFile.EnsureMkDirs.exists())
+			AbsoluteFile
+		}
+
+		def EnsureMkDirs: File = {
+			if (!(AbsoluteFile.isDirectory || AbsoluteFile.mkdirs()))
+				require(AbsoluteFile.isDirectory || AbsoluteFile.mkdirs())
+			AbsoluteFile
+		}
+
+		def ParentFile: File = AbsoluteFile.getParentFile.getAbsoluteFile
 
 		def ls: Stream[File] =
 			if (!AbsoluteFile.isDirectory)
@@ -80,18 +96,10 @@ trait PiFileT {
 			file
 		}
 
-		def EnsureParent: File = {
-			require(ParentFile.EnsureMkDirs.exists())
-			AbsoluteFile
+		def isEmpty: Boolean = {
+			require(AbsoluteFile.isDirectory)
+			AbsoluteFile.list().isEmpty
 		}
-
-		def EnsureMkDirs: File = {
-			if (!(AbsoluteFile.isDirectory || AbsoluteFile.mkdirs()))
-				require(AbsoluteFile.isDirectory || AbsoluteFile.mkdirs())
-			AbsoluteFile
-		}
-
-		def ParentFile: File = AbsoluteFile.getParentFile.getAbsoluteFile
 
 		def extend(f: String => String): File = ParentFile / f(AbsoluteFile.getName)
 

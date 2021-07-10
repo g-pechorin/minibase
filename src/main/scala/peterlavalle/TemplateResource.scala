@@ -126,23 +126,43 @@ trait TemplateResource {
 			}
 
 		loop {
-			val template: String = getClass.getSimpleName.reverse.dropWhile('$' == (_: Char)).reverse + '.' + name
 
-			val resourceStream: InputStream = getClass.getResourceAsStream(template)
-			require(
-				null != resourceStream,
-				s"cannot find resource `$template`"
-			)
-			try {
-				val bufferedSource: BufferedSource = Source.fromInputStream(resourceStream)
-				try {
-					bufferedSource.mkString.splitLines
-				} finally {
-					bufferedSource.close()
+			def classes(clazz: Class[_]): Stream[Class[_]] = {
+				if (null == clazz || classOf[Object] == clazz)
+					Stream()
+				else {
+					val supe: Class[_] = clazz.getSuperclass
+					val tail: Stream[Class[_]] = clazz.getInterfaces.toStream
+
+					val more = (supe #:: tail)
+
+					clazz #:: (more flatMap classes)
 				}
-			} finally {
-				resourceStream.close()
 			}
+
+			classes(getClass)
+				.map {
+					clazz =>
+						clazz getResourceAsStream (clazz.getSimpleName.reverse.dropWhile('$' == (_: Char)).reverse + '.' + name)
+				}
+				.filter(null != _) match {
+				case Stream(resourceStream: InputStream) =>
+					require(
+						null != resourceStream,
+						s"cannot find resource `???.$name`"
+					)
+					try {
+						val bufferedSource: BufferedSource = Source.fromInputStream(resourceStream)
+						try {
+							bufferedSource.mkString.splitLines
+						} finally {
+							bufferedSource.close()
+						}
+					} finally {
+						resourceStream.close()
+					}
+			}
+
 		}
 
 	}
